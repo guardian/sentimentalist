@@ -2,7 +2,7 @@ package sentimentalist.lambda
 
 object Cleaner {
 
-  private val whitelist = Seq("the")
+  private val whitelist = Seq("the", "good", "bad", "is")
 
   def clean(text: String): String = {
     val words = text.split("\\b")
