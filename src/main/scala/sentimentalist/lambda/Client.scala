@@ -1,5 +1,9 @@
 package sentimentalist.lambda
 
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.comprehend.ComprehendClient
+
 object Client extends App {
 
 //  val result = SentimentAnalyst.batchMoods(
@@ -12,9 +16,20 @@ object Client extends App {
 //  )
 //  result.resultList().forEach(println)
 
+  private val credProvider =
+    ProfileCredentialsProvider.create("developerPlayground")
+
+  private val region = Region.EU_WEST_1
+
+  private val comprehend = ComprehendClient
+    .builder()
+    .credentialsProvider(credProvider)
+    .region(region)
+    .build()
+
   val text = "The Guardian is great!"
   val cleanedText = Cleaner.clean(text)
-  val singleResult = SentimentAnalyst.mood(cleanedText)
+  val singleResult = SentimentAnalyst.mood(comprehend)(cleanedText)
   println(singleResult.sentimentAsString())
   println(singleResult.sentimentScore())
 }
