@@ -1,4 +1,4 @@
-package gu
+package sentimentalist.lambda
 
 case class Output(
     id: String,

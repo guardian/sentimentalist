@@ -1,4 +1,4 @@
-package gu
+package sentimentalist.lambda
 
 object Client extends App {
 

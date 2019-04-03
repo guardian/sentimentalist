@@ -1,15 +1,9 @@
-package gu
+package sentimentalist.lambda
 
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.comprehend.ComprehendClient
-import software.amazon.awssdk.services.comprehend.model.{
-  BatchDetectSentimentRequest,
-  BatchDetectSentimentResponse,
-  DetectSentimentRequest,
-  DetectSentimentResponse,
-  LanguageCode
-}
+import software.amazon.awssdk.services.comprehend.model._
 
 object SentimentAnalyst {
 
