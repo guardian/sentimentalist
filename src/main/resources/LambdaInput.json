@@ -1,0 +1,14 @@
+[
+  {
+    "caseId": "1",
+    "description": "this is very bad."
+  },
+  {
+    "caseId": "2",
+    "description": "this is really good!"
+  },
+  {
+    "caseId": "3",
+    "description": "this is partly good and bad?"
+  }
+]

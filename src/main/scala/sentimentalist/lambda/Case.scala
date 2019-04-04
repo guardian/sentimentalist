@@ -1,6 +1,6 @@
 package sentimentalist.lambda
 
 case class Case(
-    caseId: Int,
+    caseId: String,
     description: String
 )
