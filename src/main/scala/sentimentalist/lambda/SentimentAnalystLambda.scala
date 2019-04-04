@@ -6,24 +6,28 @@ import io.github.mkotsur.aws.handler.Lambda
 import io.github.mkotsur.aws.handler.Lambda._
 import software.amazon.awssdk.services.comprehend.ComprehendClient
 
-object SentimentAnalystLambda extends Lambda[Input, Output] {
+object SentimentAnalystLambda extends Lambda[Case, AnalysedCase] {
 
   private val comprehend = ComprehendClient.builder().build()
 
   private val mood = SentimentAnalyst.mood(comprehend) _
 
   override def handle(
-      input: Input,
+      input: Case,
       context: Context
-  ): Either[Throwable, Output] = {
-    val cleanedText = Cleaner.clean(input.text)
+  ): Either[Throwable, AnalysedCase] = {
+    val cleanedText = Cleaner.clean(input.description)
     val singleResult = mood(cleanedText)
     Right(
-      Output(
-        input.id,
-        input.text,
-        singleResult.sentimentAsString(),
-        SentimentScore.fromAwsScore(singleResult.sentimentScore())
+      AnalysedCase(
+        epoch = "1",
+        inputType = "CSR Case",
+        inputId = input.caseId.toString,
+        inputText = input.description,
+        overallSentiment = singleResult.sentimentAsString(),
+        sentimentBreakdown =
+          SentimentScore.fromAwsScore(singleResult.sentimentScore()),
+        entities = Nil
       )
     )
   }

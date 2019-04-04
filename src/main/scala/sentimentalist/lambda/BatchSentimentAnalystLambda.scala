@@ -8,28 +8,34 @@ import software.amazon.awssdk.services.comprehend.ComprehendClient
 
 import scala.collection.JavaConverters._
 
-object BatchSentimentAnalystLambda extends Lambda[Seq[Input], Seq[Output]] {
+object BatchSentimentAnalystLambda
+    extends Lambda[CaseBatch, Seq[AnalysedCase]] {
 
   private val comprehend = ComprehendClient.builder().build()
 
   private val moods = SentimentAnalyst.batchMoods(comprehend) _
 
   override def handle(
-      input: Seq[Input],
+      input: CaseBatch,
       context: Context
-  ): Either[Throwable, Seq[Output]] = {
-    val cleanedTexts = input.map(in => Cleaner.clean(in.text))
+  ): Either[Throwable, Seq[AnalysedCase]] = {
+    val cleanedTexts =
+      input.records.map(c => Cleaner.clean(c.description))
     val results = moods(cleanedTexts)
     Right {
-      val resultsAndInputs = results.resultList().asScala.toList.zip(input)
+      val resultsAndInputs =
+        results.resultList().asScala.toList.zip(input.records)
       resultsAndInputs map {
-        case (result, inputItem) =>
-          Output(
-            id = inputItem.id,
-            text = inputItem.text,
-            sentiment = result.sentimentAsString(),
-            sentimentScore =
-              SentimentScore.fromAwsScore(result.sentimentScore())
+        case (result, caseRecord) =>
+          AnalysedCase(
+            epoch = "1",
+            inputType = "CSR Case",
+            inputId = caseRecord.caseId.toString,
+            inputText = caseRecord.description,
+            overallSentiment = result.sentimentAsString(),
+            sentimentBreakdown =
+              SentimentScore.fromAwsScore(result.sentimentScore()),
+            entities = Nil
           )
       }
     }
