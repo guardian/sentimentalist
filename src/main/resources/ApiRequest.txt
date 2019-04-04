@@ -1,3 +1,0 @@
-curl -v -X POST \
-  'https://l7ah3sl0wk.execute-api.eu-west-1.amazonaws.com/test' \
-  -d '[{"caseId": "1", "description": "this is very bad."}]'
