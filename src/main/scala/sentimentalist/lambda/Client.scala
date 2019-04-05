@@ -3,6 +3,7 @@ package sentimentalist.lambda
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.comprehend.ComprehendClient
+import software.amazon.awssdk.services.s3.S3Client
 
 object Client extends App {
 
@@ -27,9 +28,18 @@ object Client extends App {
     .region(region)
     .build()
 
+  private val s3 = S3Client
+    .builder()
+    .credentialsProvider(credProvider)
+    .region(region)
+    .build()
+
   val text = "The Guardian is great!"
   val cleanedText = Cleaner.clean(text)
   val singleResult = SentimentAnalyst.mood(comprehend)(cleanedText)
   println(singleResult.sentimentAsString())
   println(singleResult.sentimentScore())
+  val upload =
+    S3Uploader.upload(s3, "kelvin-test")("test", "this is test content")
+  println(upload)
 }
