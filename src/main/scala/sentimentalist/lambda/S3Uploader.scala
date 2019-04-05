@@ -7,11 +7,7 @@ import software.amazon.awssdk.services.s3.model.{
   PutObjectResponse
 }
 
-import scala.collection.JavaConverters._
-
 object S3Uploader {
-
-  private val metadata = Map.empty[String, String].asJava
 
   def upload(
       s3: S3Client,
@@ -21,7 +17,7 @@ object S3Uploader {
       .builder()
       .bucket(bucket)
       .key(key)
-      .metadata(metadata)
+      .contentType("application/json")
       .build()
     s3.putObject(request, RequestBody.fromString(content))
   }

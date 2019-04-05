@@ -12,6 +12,10 @@ libraryDependencies ++= Seq(
 assemblyMergeStrategy in assembly := {
   case PathList(ps @ _*) if ps.last endsWith ".properties" =>
     MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith ".config" =>
+    MergeStrategy.first
+  case PathList(ps @ _*) if ps.last endsWith ".json" =>
+    MergeStrategy.first
   case x =>
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
