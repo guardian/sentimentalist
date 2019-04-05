@@ -18,6 +18,7 @@ object BatchSentimentAnalystLambda extends Lambda[Seq[Case], Seq[AnalysedCase]] 
   private val s3 = S3Client.builder().build()
 
   private val moods = SentimentAnalyst.batchMoods(comprehend) _
+  private val entities = EntityAnalyst.batchEntities(comprehend) _
   private val uploadToS3 = S3Uploader.upload(s3, "gu-sentimentalist") _
 
   private val dateFormatter = new SimpleDateFormat("yyyy-MM-dd")
@@ -29,9 +30,11 @@ object BatchSentimentAnalystLambda extends Lambda[Seq[Case], Seq[AnalysedCase]] 
   }
 
   override def handle(input: Seq[Case], context: Context): Either[Throwable, Seq[AnalysedCase]] = {
-    val results = moods(input map (_.description))
-    val resultsAndInputs = results.resultList().asScala.toList.zip(input)
-    val analysedCases = AnalysedCase.fromResultsAndInputs(resultsAndInputs)
+    val texts = input map (_.description)
+    val sentimentAnalysis = moods(texts).resultList().asScala.toList
+    val entityAnalysis = entities(texts).resultList().asScala.toList
+    val inputsAndResults = (input, sentimentAnalysis, entityAnalysis).zipped.toList
+    val analysedCases = AnalysedCase.fromInputsAndResults(inputsAndResults)
     uploadToS3(s3Key(), analysedCases)
     Right(analysedCases)
   }
