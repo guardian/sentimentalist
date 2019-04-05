@@ -3,7 +3,7 @@ package sentimentalist.lambda
 import software.amazon.awssdk.services.comprehend.model.BatchDetectSentimentItemResult
 
 case class AnalysedCase(
-    epoch: String,
+    epoch: Long,
     inputType: String,
     inputId: String,
     inputText: String,
@@ -20,7 +20,7 @@ object AnalysedCase {
     resultsAndInputs map {
       case (result, caseRecord) =>
         AnalysedCase(
-          epoch = "1",
+          epoch = 1,
           inputType = "CSR Case",
           inputId = caseRecord.caseId.toString,
           inputText = Cleaner.clean(caseRecord.description),
