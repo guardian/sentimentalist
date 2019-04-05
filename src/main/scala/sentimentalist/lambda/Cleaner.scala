@@ -17,7 +17,13 @@ object Cleaner {
     "theresa",
     "times",
     "tusk",
-    "week"
+    "week",
+    "what",
+    "when",
+    "why",
+    ".",
+    "?",
+    "!"
   )
 
   def clean(text: String): String = {
