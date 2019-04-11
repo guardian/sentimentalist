@@ -18,6 +18,6 @@ object S3Uploader {
       .key(key)
       .contentType("application/json")
       .build()
-    s3.putObject(request, RequestBody.fromString(analysedCases.asJson.noSpaces))
+    s3.putObject(request, RequestBody.fromString(analysedCases.map(_.asJson.noSpaces).mkString("\n")))
   }
 }
