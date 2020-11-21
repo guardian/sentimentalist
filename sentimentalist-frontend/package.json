@@ -13,7 +13,7 @@
     "typescript": "3.4.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.437.0",
+    "aws-sdk": "^2.783.0",
     "chart.js": "^2.8.0",
     "d3": "^5.9.2",
     "d3plus": "^1.9.8",
